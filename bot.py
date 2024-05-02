@@ -51,6 +51,7 @@ def start(message):
         "Так же я могу работать с голосовыми сообщениями просто запиши мне ГС🔊, "
         "и я c  удовольствием поговорю с тобой🗣️.\n\n"
         "Если возникнут вопросы используй команду /help\n"
+        "что бы проверить работоспособность бота можешь использовать команды /stt и /tts.\n\n"
         f"Ну что, начнём?"
     )
 
@@ -95,7 +96,8 @@ def help_command(message: Message):
     text = (
         "👋 Я твой цифровой собеседник.\n\n"
         "Что бы воспользоваться функцией gpt помощника 🕵‍♀️ следуй инструкциям бота .\n\n"
-        "Этот бот сделан на базе нейронной сети YandexGPT Lite. \n"
+        "Этот бот сделан на базе нейронной сети YandexGPT Lite,  \n"
+        "а так же в нём используется технология распознавания и синтеза речи Yandex SpeechKit\n"
         "Это мой первый опыт знакомства с gpt, "
         "поэтому не переживай если возникла какая-то ошибка. Просто сообщи мне об этом)\n"
         "И я постараюсь её решить.\n\n"
@@ -123,6 +125,94 @@ def filter_bye(message):
 @bot.message_handler(content_types=["text"], func=filter_bye)
 def say_bye(message: Message):
     bot.send_message(chat_id=message.chat.id, text="Пока, заходи ещё!")
+
+
+@bot.message_handler(commands=['tts'])
+def tts_handler(message):
+    user_id = message.from_user.id
+    bot.send_message(
+        chat_id=user_id,
+        text='Отправь следующим сообщением текст💬, чтобы я его озвучил!🔊'
+    )
+    bot.register_next_step_handler(message, tts)
+
+
+def tts(message):
+    user_id = message.from_user.id
+    text = message.text
+
+    # Проверка, что сообщение действительно текстовое
+    if message.content_type != 'text':
+        bot.send_message(
+            chat_id=user_id,
+            text='Отправь текстовое сообщение'
+        )
+        bot.register_next_step_handler(message, tts)
+        return
+
+        # Считаем символы в тексте и проверяем сумму потраченных символов
+    tts_symbol = is_tts_symbol_limit(message, text)
+    if tts_symbol is None:
+        return
+
+    # Получаем статус и содержимое ответа от SpeechKit
+    status, content = text_to_speech(text)
+
+    # Если статус True - отправляем голосовое сообщение, иначе - сообщение об ошибке
+    if status:
+        bot.send_voice(
+            chat_id=user_id,
+            voice=content
+        )
+    else:
+        bot.send_message(
+            chat_id=user_id,
+            text=content
+        )
+
+
+@bot.message_handler(commands=['stt'])
+def stt_handler(message):
+    user_id = message.from_user.id
+    bot.send_message(
+        chat_id=user_id,
+        text="Отправь голосовое сообщение🔊, чтобы я его распознал!💬"
+    )
+    bot.register_next_step_handler(message, stt)
+
+
+def stt(message):
+    user_id = message.from_user.id
+
+    # Проверка, что сообщение действительно голосовое
+    if not message.voice:
+        bot.send_message(
+            chat_id=user_id,
+            text="Пожалуйста, запиши ГС"
+        )
+        bot.register_next_step_handler(message, stt)
+        return
+
+    # Считаем аудиоблоки и проверяем сумму потраченных аудиоблоков
+    stt_blocks, error = is_stt_block_limit(message, message.voice.duration)
+    if not stt_blocks:
+        return
+
+    file_id = message.voice.file_id  # получаем id голосового сообщения
+    file_info = bot.get_file(file_id)  # получаем информацию о голосовом сообщении
+    file = bot.download_file(file_info.file_path)  # скачиваем голосовое сообщение
+
+    # Получаем статус и содержимое ответа от SpeechKit
+    status, text = speech_to_text(file)  # преобразовываем голосовое сообщение в текст
+
+    if status:
+        bot.send_message(
+            chat_id=user_id,
+            text=text,
+            reply_to_message_id=message.id
+        )
+    else:
+        bot.send_message(user_id, text)
 
 
 # Декоратор для обработки голосовых сообщений, полученных ботом

@@ -70,8 +70,11 @@ def create_table():
 def add_new_user(user_id: int):
     """Функция добавления нового пользователя в базу"""
     if not is_user_in_db(user_id):
-        sql_query = f"INSERT INTO {DB_TABLE_USERS_NAME} " f"(user_id) " f"VALUES (?);"
-
+        sql_query = (
+            f"INSERT INTO {DB_TABLE_USERS_NAME} " 
+            f"(user_id, message, role, total_gpt_tokens, tts_symbols, stt_blocks) "
+            f"VALUES (?, 'Привет', 'user', {0}, {0}, {0});"
+        )
         execute_query(sql_query, (user_id,))
         print("Пользователь успешно добавлен")
         logging.info("Пользователь успешно добавлен")

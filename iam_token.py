@@ -61,3 +61,4 @@ def get_iam_token() -> str:
         token_data = json.load(token_file)
 
     return token_data.get("access_token")
+

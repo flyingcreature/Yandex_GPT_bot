@@ -11,7 +11,7 @@ from config import (
     MAX_MODEL_TOKENS,
     SYSTEM_PROMPT,
     URL_GPT,
-    URL_TOKENS,
+    URL_TOKENS
 )
 
 logging.basicConfig(
