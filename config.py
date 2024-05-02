@@ -12,7 +12,7 @@ IAM_TOKEN = getenv("iam_token")  # Iam токен для gpt
 
 HOME_DIR = "/home/student/Dev/Yandex_GPT_bot"  # путь к папке с проектом для удалённого сервера
 
-LOGS_PATH = f"log_file.txt"  # Путь к файлу логов
+LOGS_PATH = f"{HOME_DIR}/log_file.txt"  # Путь к файлу логов
 
 ADMINS = [1645457137, 786540182]  # Список user_id админов
 
@@ -30,7 +30,7 @@ MAX_TTS_SYMBOLS = 200  # Максимальный размер ответа
 
 MAX_USER_GPT_TOKENS = 5000  # 5 000 токенов для генерации текста
 
-DB_NAME = f"db.sqlite"  # файл для базы данных
+DB_NAME = f"{HOME_DIR}/db.sqlite"  # файл для базы данных
 
 DB_TABLE_USERS_NAME = "users"  # Название таблицы
 
