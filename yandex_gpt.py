@@ -2,10 +2,11 @@ import logging
 
 import requests
 
+from utils import get_iam_token
+
 from config import (
     FOLDER_ID,
     GPT_MODEL,
-    IAM_TOKEN,
     LOGS_PATH,
     MAX_MODEL_TOKENS,
     SYSTEM_PROMPT,
@@ -23,10 +24,10 @@ logging.basicConfig(
 
 def count_gpt_tokens(messages: list) -> int:
     """Функция для подсчёта токенов в сообщении"""
-    # iam_token = get_iam_token() когда на сервер выкладывать
+    iam_token = get_iam_token()
 
     headers = {
-        "Authorization": f"Bearer {IAM_TOKEN}",
+        "Authorization": f"Bearer {iam_token}",
         "Content-Type": "application/json",
     }
     data = {"modelUri": f"gpt://{FOLDER_ID}/{GPT_MODEL}-lite", "messages": messages}
@@ -38,7 +39,7 @@ def count_gpt_tokens(messages: list) -> int:
     except Exception as e:
         logging.error(
             f"Ошибка при подсчёте токенов{e}"
-        )  # если ошибка - записываем её в логи
+        )
         return 0
 
 
@@ -47,11 +48,11 @@ def ask_gpt_helper(messages):
     Отправляет запрос к модели GPT с задачей и предыдущими ответами
     для получения ответа или следующего шага
     """
-    # iam_token = get_iam_token() когда на сервер выкладывать
+    iam_token = get_iam_token()
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {IAM_TOKEN}",
+        "Authorization": f"Bearer {iam_token}",
         "x-folder-id": f"{FOLDER_ID}",
     }
     data = {

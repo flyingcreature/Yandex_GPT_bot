@@ -1,14 +1,15 @@
 import requests
 
-from config import FOLDER_ID, IAM_TOKEN, RUS, URL_SPEECHKIT_TEXT, URL_SPEECHKIT_VOICE
-from utils import logging
+from config import FOLDER_ID, RUS, URL_SPEECHKIT_TEXT, URL_SPEECHKIT_VOICE
+from utils import logging, get_iam_token
 
 
 def text_to_speech(text: str):
     """Функция для преобразования текста в ГС"""
+    iam_token = get_iam_token()
     # Аутентификация через IAM-токен
     headers = {
-        "Authorization": f"Bearer {IAM_TOKEN}",
+        "Authorization": f"Bearer {iam_token}",
     }
     data = {
         "text": text,  # текст, который нужно преобразовать в голосовое сообщение
@@ -28,6 +29,8 @@ def text_to_speech(text: str):
 
 def speech_to_text(data):
     """Функция для преобразования ГС в текст"""
+    iam_token = get_iam_token()
+
     # Указываем параметры запроса
     params = "&".join(
         [
@@ -39,7 +42,7 @@ def speech_to_text(data):
 
     # Аутентификация через IAM-токен
     headers = {
-        "Authorization": f"Bearer {IAM_TOKEN}",
+        "Authorization": f"Bearer {iam_token}",
     }
 
     # Выполняем запрос

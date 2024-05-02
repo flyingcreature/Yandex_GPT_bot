@@ -10,7 +10,9 @@ FOLDER_ID = getenv("folder_id")  # Folder_id для gpt
 
 IAM_TOKEN = getenv("iam_token")  # Iam токен для gpt
 
-LOGS_PATH = "log_file.txt"  # Путь к файлу логов
+HOME_DIR = "/home/student/Dev/Yandex_GPT_bot"  # путь к папке с проектом для удалённого сервера
+
+LOGS_PATH = f"{HOME_DIR}/log_file.txt"  # Путь к файлу логов
 
 ADMINS = [1645457137, 786540182]  # Список user_id админов
 
@@ -28,7 +30,7 @@ MAX_TTS_SYMBOLS = 200  # Максимальный размер ответа
 
 MAX_USER_GPT_TOKENS = 5000  # 5 000 токенов для генерации текста
 
-DB_NAME = "db.sqlite"  # файл для базы данных
+DB_NAME = f"{HOME_DIR}/db.sqlite"  # файл для базы данных
 
 DB_TABLE_USERS_NAME = "users"  # Название таблицы
 
@@ -46,7 +48,7 @@ GPT_MODEL = "yandexgpt"  # Модель gpt
 
 IAM_TOKEN_ENDPOINT = "http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token"  # Адресс токена
 
-IAM_TOKEN_PATH = "token_data.json"  # Путь к json файлу с ключом
+IAM_TOKEN_PATH = f"{HOME_DIR}/token_data.json"  # Путь к json файлу с ключом
 
 URL_TOKENS = "https://llm.api.cloud.yandex.net/foundationModels/v1/tokenizeCompletion"  # Ссылка на токены gpt
 

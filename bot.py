@@ -1,7 +1,7 @@
 import logging
 
 import telebot
-from telebot.types import Message, ReplyKeyboardRemove
+from telebot.types import Message
 
 import db
 from config import ADMINS, BOT_TOKEN, COUNT_LAST_MSG, LOGS_PATH, MAX_USERS
@@ -22,6 +22,10 @@ logging.basicConfig(
 )
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+# Создаем базу и табличку в ней
+db.create_db()
+db.create_table()
 
 
 @bot.message_handler(commands=["start"])
@@ -97,9 +101,7 @@ def help_command(message: Message):
         "И я постараюсь её решить.\n\n"
         " P.S. мои контакты можно найти в описании бота"
     )
-    bot.send_message(
-        chat_id=message.chat.id, text=text, reply_markup=ReplyKeyboardRemove()
-    )
+    bot.send_message(chat_id=message.chat.id, text=text)
 
 
 def filter_hello(message):
