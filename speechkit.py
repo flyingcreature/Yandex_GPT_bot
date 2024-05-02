@@ -1,7 +1,8 @@
 import requests
 
 from config import FOLDER_ID, RUS, URL_SPEECHKIT_TEXT, URL_SPEECHKIT_VOICE
-from utils import logging, get_iam_token
+from utils import logging
+from iam_token import get_iam_token
 
 
 def text_to_speech(text: str):

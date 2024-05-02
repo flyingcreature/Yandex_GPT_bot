@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from utils import get_iam_token
+from iam_token import get_iam_token
 
 from config import (
     FOLDER_ID,
